@@ -1460,7 +1460,7 @@ async function UsagePanel主页(TOKEN) {
             font-weight: 600;
             margin-bottom: 1.5rem;
             text-align: center;
-            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            background: var(--heading-grad);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -1489,6 +1489,15 @@ async function UsagePanel主页(TOKEN) {
             color: var(--text-muted);
         }
 
+        :root.light-mode .login-input {
+            background: rgba(79, 70, 229, 0.08);
+            border-color: rgba(79, 70, 229, 0.2);
+        }
+
+        :root.light-mode .login-input:focus {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
         .login-btn {
             width: 100%;
             padding: 0.875rem;
@@ -1506,6 +1515,10 @@ async function UsagePanel主页(TOKEN) {
         .login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        :root.light-mode .login-btn:hover {
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35);
         }
 
         .login-btn:disabled {
@@ -1529,6 +1542,12 @@ async function UsagePanel主页(TOKEN) {
         .login-error.show {
             display: block;
             animation: shake 0.4s ease;
+        }
+
+        :root.light-mode .login-error {
+            background: rgba(239, 68, 68, 0.08);
+            color: #dc2626;
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
         @keyframes shake {
