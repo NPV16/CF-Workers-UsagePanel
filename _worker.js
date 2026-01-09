@@ -34,12 +34,15 @@ export default {
                     usage_json.msg = '✅ 成功加载请求数使用数据';
                 }
                 return new Response(JSON.stringify(usage_json, null, 2), { headers: { 'Content-Type': 'application/json;charset=UTF-8' } });
-            } else if (访问路径 == 'admin' || 访问路径.startsWith('admin/') || 区分大小写访问路径 === 'config.json') {// 管理员面板
+            } else if (访问路径 == 'admin' || 访问路径.startsWith('admin/')) {// 管理员面板
                 // 管理面板 - 验证Cookie
                 if (验证管理员Cookie()) {
                     if (区分大小写访问路径 === 'admin/config.json') {
                         const usage_config_json = await env.KV.get('usage_config.json', { type: 'json' }) || [];
                         return new Response(JSON.stringify(usage_config_json, null, 2), { status: 200, headers: { 'Content-Type': 'application/json;charset=UTF-8' } });
+                    } else if (区分大小写访问路径 === 'admin/usage.json') {
+                        const usage_json = await 更新请求数(env);
+                        return new Response(JSON.stringify(usage_json, null, 2), { headers: { 'Content-Type': 'application/json;charset=UTF-8' } });
                     }
 
                     return UsagePanel管理面板(管理员TOKEN);
