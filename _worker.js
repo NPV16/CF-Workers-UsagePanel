@@ -367,6 +367,30 @@ async function UsagePanel管理面板(TOKEN) {
             --text-muted: #94a3b8;
             --stroke: rgba(255, 255, 255, 0.08);
             --danger: #ef4444;
+            --heading-grad: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            --item-bg: rgba(255, 255, 255, 0.03);
+            --footer-color: rgba(255, 255, 255, 0.2);
+            --footer-hover: rgba(255, 255, 255, 0.4);
+            --track-bg: rgba(0, 0, 0, 0.2);
+            --input-bg: rgba(0, 0, 0, 0.2);
+        }
+
+        :root.light-mode {
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.2);
+            --accent: #9333ea;
+            --background: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --stroke: rgba(0, 0, 0, 0.1);
+            --danger: #dc2626;
+            --heading-grad: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+            --item-bg: rgba(0, 0, 0, 0.03);
+            --footer-color: rgba(15, 23, 42, 0.4);
+            --footer-hover: var(--primary);
+            --track-bg: rgba(0, 0, 0, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.8);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -453,7 +477,7 @@ async function UsagePanel管理面板(TOKEN) {
         h1, h2 {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            background: var(--heading-grad);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -492,12 +516,12 @@ async function UsagePanel管理面板(TOKEN) {
         .usage-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; }
         .label { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
         .percentage { font-family: 'Outfit', monospace; font-size: 1.25rem; font-weight: 600; color: var(--text-main); text-shadow: 0 0 20px var(--primary-glow); }
-        .progress-track { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 999px; height: 14px; overflow: hidden; position: relative; }
+        .progress-track { background: var(--track-bg); border: 1px solid var(--stroke); border-radius: 999px; height: 14px; overflow: hidden; position: relative; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 999px; width: 0%; transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
         .progress-bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: translateX(-100%); animation: shimmer 2.5s infinite; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-        .mini-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; padding: 1.25rem; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; }
-        .mini-card:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.15); }
+        .mini-card { background: var(--item-bg); border: 1px solid var(--stroke); border-radius: 16px; padding: 1.25rem; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; }
+        .mini-card:hover { background: rgba(99, 102, 241, 0.05); transform: translateY(-4px); border-color: var(--primary); }
         .mini-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
         .mini-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.25rem; }
         .mini-value { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
@@ -506,8 +530,8 @@ async function UsagePanel管理面板(TOKEN) {
         /* Account List Styles */
         .account-list { display: flex; flex-direction: column; gap: 1rem; }
         .account-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--item-bg);
+            border: 1px solid var(--stroke);
             border-radius: 20px;
             padding: 1.5rem;
             display: flex;
@@ -571,10 +595,10 @@ async function UsagePanel管理面板(TOKEN) {
         .input-group input {
             width: 100%;
             padding: 0.75rem 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--input-bg);
+            border: 1px solid var(--stroke);
             border-radius: 12px;
-            color: white;
+            color: var(--text-main);
             outline: none;
             transition: border-color 0.3s;
         }
@@ -622,10 +646,36 @@ async function UsagePanel管理面板(TOKEN) {
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-wrap { display: flex; justify-content: center; padding: 3rem; }
+
+        .footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--footer-color);
+            transition: color 0.3s;
+        }
+        
+        .footer:hover {
+            color: var(--footer-hover);
+        }
+
+        a.footer {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a.footer:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="top-nav">
+        <button class="nav-btn" onclick="toggleTheme()" id="theme-toggle">
+            <svg id="sun-icon" style="display:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="18.36" x2="5.64" y2="19.78"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
+            <svg id="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <span id="theme-text">切换模式</span>
+        </button>
         <button class="nav-btn" onclick="copyUsageAPI()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             复制 UsageAPI
@@ -652,6 +702,10 @@ async function UsagePanel管理面板(TOKEN) {
             <div id="config-content">
                 <div class="loading-wrap"><div class="loading-spinner"></div></div>
             </div>
+        </div>
+
+        <div class="footer">
+            由 <a href="https://github.com/cmliu/CF-Workers-UsagePanel" target="_blank" rel="noopener" class="footer">CF-Workers-UsagePanel</a> 强力驱动
         </div>
     </div>
 
@@ -682,6 +736,29 @@ async function UsagePanel管理面板(TOKEN) {
 
     <script>
         const TOKEN = '${TOKEN}';
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+            if (savedTheme === 'light' || (!savedTheme && systemLight)) {
+                document.documentElement.classList.add('light-mode');
+            }
+            updateThemeIcons();
+        }
+
+        function toggleTheme() {
+            const isLight = document.documentElement.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcons();
+        }
+
+        function updateThemeIcons() {
+            const isLight = document.documentElement.classList.contains('light-mode');
+            document.getElementById('sun-icon').style.display = isLight ? 'none' : 'block';
+            document.getElementById('moon-icon').style.display = isLight ? 'block' : 'none';
+        }
+
+        initTheme();
         
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -883,6 +960,27 @@ async function UsagePanel主页(TOKEN) {
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --stroke: rgba(255, 255, 255, 0.08);
+            --heading-grad: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            --footer-color: rgba(255, 255, 255, 0.2);
+            --footer-hover: rgba(255, 255, 255, 0.4);
+            --item-bg: rgba(255, 255, 255, 0.03);
+            --track-bg: rgba(0, 0, 0, 0.2);
+        }
+
+        :root.light-mode {
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.2);
+            --accent: #9333ea;
+            --background: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --stroke: rgba(0, 0, 0, 0.1);
+            --heading-grad: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+            --footer-color: rgba(15, 23, 42, 0.4);
+            --footer-hover: var(--primary);
+            --item-bg: rgba(0, 0, 0, 0.03);
+            --track-bg: rgba(0, 0, 0, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -928,7 +1026,7 @@ async function UsagePanel主页(TOKEN) {
         h1 {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            background: var(--heading-grad);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -996,8 +1094,8 @@ async function UsagePanel主页(TOKEN) {
         }
 
         .progress-track {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--track-bg);
+            border: 1px solid var(--stroke);
             border-radius: 999px;
             height: 14px;
             overflow: hidden;
@@ -1031,8 +1129,8 @@ async function UsagePanel主页(TOKEN) {
         }
 
         .mini-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--item-bg);
+            border: 1px solid var(--stroke);
             border-radius: 16px;
             padding: 1.25rem;
             display: flex;
@@ -1042,9 +1140,9 @@ async function UsagePanel主页(TOKEN) {
         }
 
         .mini-card:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(99, 102, 241, 0.05);
             transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary);
         }
 
         .mini-icon {
@@ -1079,12 +1177,12 @@ async function UsagePanel主页(TOKEN) {
             margin-top: 2.5rem;
             text-align: center;
             font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.2);
+            color: var(--footer-color);
             transition: color 0.3s;
         }
         
         .footer:hover {
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--footer-hover);
         }
 
         /* 管理员登录气泡 */
@@ -1321,6 +1419,34 @@ async function UsagePanel主页(TOKEN) {
             text-align: center;
         }
 
+        /* 主题切换气泡 */
+        .theme-bubble {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            width: 48px;
+            height: 48px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--stroke);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            color: var(--text-main);
+        }
+
+        .theme-bubble:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+        }
+
+        .theme-bubble svg { width: 22px; height: 22px; stroke: currentColor; }
+
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -1336,6 +1462,12 @@ async function UsagePanel主页(TOKEN) {
     </style>
 </head>
 <body>
+    <!-- 主题切换气泡 -->
+    <div class="theme-bubble" onclick="toggleTheme()" title="切换显示模式">
+        <svg id="sun-icon" style="display:none" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="18.36" x2="5.64" y2="19.78"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
+        <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </div>
+
     <!-- 管理员登录气泡 -->
     <div class="admin-bubble" onclick="openLoginModal()" title="管理员登录">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1381,6 +1513,29 @@ async function UsagePanel主页(TOKEN) {
     </div>
 
     <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+            if (savedTheme === 'light' || (!savedTheme && systemLight)) {
+                document.documentElement.classList.add('light-mode');
+            }
+            updateThemeIcons();
+        }
+
+        function toggleTheme() {
+            const isLight = document.documentElement.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcons();
+        }
+
+        function updateThemeIcons() {
+            const isLight = document.documentElement.classList.contains('light-mode');
+            document.getElementById('sun-icon').style.display = isLight ? 'none' : 'block';
+            document.getElementById('moon-icon').style.display = isLight ? 'block' : 'none';
+        }
+
+        initTheme();
+
         async function fetchUsage() {
             const content = document.getElementById('content');
             try {
