@@ -107,7 +107,7 @@ export default {
                         // 验证配置完整性：需要 (Email + GlobalAPIKey) 或 (AccountID + APIToken)
                         const hasEmailAuth = newConfig.Email && newConfig.GlobalAPIKey;
                         const hasTokenAuth = newConfig.AccountID && newConfig.APIToken;
-                        
+
                         if (!hasEmailAuth && !hasTokenAuth) {
                             return new Response(JSON.stringify({ success: false, msg: '配置不完整，需要提供 Email+GlobalAPIKey 或 AccountID+APIToken' }), { status: 400, headers: { 'Content-Type': 'application/json;charset=utf-8' } });
                         }
@@ -145,7 +145,7 @@ export default {
                         }
 
                         // 验证账号是否已存在 (通过 Email 或 AccountID 判断)
-                        const existingIndex = usage_config_json.findIndex(item => 
+                        const existingIndex = usage_config_json.findIndex(item =>
                             (CF_JSON.Email && item.Email && item.Email.toLowerCase() === CF_JSON.Email.toLowerCase()) ||
                             (CF_JSON.AccountID && item.AccountID && item.AccountID === CF_JSON.AccountID)
                         );
@@ -959,19 +959,38 @@ async function UsagePanel管理面板(TOKEN) {
 
     <!-- 添加账号模态框 -->
     <div class="modal-overlay" id="addModal">
-        <div class="modal">
+        <div class="modal" style="max-width: 440px;">
             <h3>添加 Cloudflare 账号</h3>
             <div class="input-group">
                 <label>账号备注</label>
-                <input type="text" id="newName" placeholder="admin@google.com">
+                <input type="text" id="newName" placeholder="我的账号">
             </div>
             <div class="input-group">
-                <label>Account ID</label>
-                <input type="text" id="newAccountID" placeholder="Workers和Pages 面板右侧的 AccountID">
+                <label>验证方式</label>
+                <select id="authMethod" onchange="switchAuthMethod()" style="width: 100%; padding: 0.75rem 1rem; background: var(--input-bg); border: 1px solid var(--stroke); border-radius: 12px; color: var(--text-main); outline: none; cursor: pointer; appearance: none; -webkit-appearance: none;">
+                    <option value="token">Account ID + API Token</option>
+                    <option value="global">Email + Global API Key</option>
+                </select>
             </div>
-            <div class="input-group">
-                <label>API Token</label>
-                <input type="password" id="newAPIToken" placeholder='包含"阅读分析数据和日志"权限的 API令牌'>
+            <div id="tokenFields">
+                <div class="input-group">
+                    <label>Account ID</label>
+                    <input type="text" id="newAccountID" placeholder="Workers和Pages 面板右侧的 AccountID">
+                </div>
+                <div class="input-group">
+                    <label>API Token</label>
+                    <input type="password" id="newAPIToken" placeholder='包含"阅读分析数据和日志"权限的 API令牌'>
+                </div>
+            </div>
+            <div id="globalFields" style="display: none;">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="newEmail" placeholder="您的 Cloudflare 账号邮箱">
+                </div>
+                <div class="input-group">
+                    <label>Global API Key</label>
+                    <input type="password" id="newGlobalAPIKey" placeholder="您的 Global API Key">
+                </div>
             </div>
             <div class="modal-actions">
                 <button class="modal-btn cancel" onclick="closeAddModal()">取消</button>
@@ -1096,10 +1115,10 @@ async function UsagePanel管理面板(TOKEN) {
                             <div class="account-info">
                                 <div>
                                     <div class="account-name">🔑 \${acc.Name}</div>
-                                    <div class="account-id">🔒 AccountID: \${acc.AccountID || 'Global API Key'}</div>
+                                    <div class="account-id">\${acc.AccountID ? \`🔒 AccountID: \${acc.AccountID}\` : \`📧 Email: \${acc.Email}\`}</div>
                                     <div class="account-id" style="margin-top: 4px; opacity: 0.8;">🕒 最后更新: \${updateTime}</div>
                                 </div>
-                                <button class="delete-btn" onclick="deleteAccount(\${acc.ID})">删除当前账号</button>
+                                <button class="delete-btn" onclick="deleteAccount(\${acc.ID})">删除账号</button>
                             </div>
                             <div class="usage-section" style="margin-bottom: 0">
                                 <div class="usage-header">
@@ -1120,29 +1139,60 @@ async function UsagePanel管理面板(TOKEN) {
             }
         }
 
-        function openAddModal() { document.getElementById('addModal').classList.add('active'); }
+        function openAddModal() { 
+            document.getElementById('addModal').classList.add('active'); 
+            document.getElementById('authMethod').value = 'token';
+            switchAuthMethod();
+        }
+
+        function switchAuthMethod() {
+            const method = document.getElementById('authMethod').value;
+            document.getElementById('tokenFields').style.display = method === 'token' ? 'block' : 'none';
+            document.getElementById('globalFields').style.display = method === 'global' ? 'block' : 'none';
+        }
+
         function closeAddModal() { 
             document.getElementById('addModal').classList.remove('active');
             document.getElementById('newName').value = '';
             document.getElementById('newAccountID').value = '';
             document.getElementById('newAPIToken').value = '';
+            document.getElementById('newEmail').value = '';
+            document.getElementById('newGlobalAPIKey').value = '';
         }
 
         async function handleAddAccount() {
             const name = document.getElementById('newName').value;
-            const accountID = document.getElementById('newAccountID').value;
-            const apiToken = document.getElementById('newAPIToken').value;
+            const method = document.getElementById('authMethod').value;
+            
+            let accountID = null, apiToken = null, email = null, globalAPIKey = null;
 
-            if (!name || !accountID || !apiToken) {
-                showToast('⚠️ 请填写完整信息');
-                return;
+            if (method === 'token') {
+                accountID = document.getElementById('newAccountID').value;
+                apiToken = document.getElementById('newAPIToken').value;
+                if (!name || !accountID || !apiToken) {
+                    showToast('⚠️ 请填写完整信息');
+                    return;
+                }
+            } else {
+                email = document.getElementById('newEmail').value;
+                globalAPIKey = document.getElementById('newGlobalAPIKey').value;
+                if (!name || !email || !globalAPIKey) {
+                    showToast('⚠️ 请填写完整信息');
+                    return;
+                }
             }
 
             try {
                 const res = await fetch('./api/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ Name: name, AccountID: accountID, APIToken: apiToken })
+                    body: JSON.stringify({ 
+                        Name: name, 
+                        AccountID: accountID, 
+                        APIToken: apiToken,
+                        Email: email,
+                        GlobalAPIKey: globalAPIKey
+                    })
                 });
                 const data = await res.json();
                 if (data.success) {
